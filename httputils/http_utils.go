@@ -38,8 +38,9 @@ func RemoteIP(r *http.Request) string {
 	return ""
 }
 
-func HttpProxyClient() *http.Client {
-	proxyUrl, err := url.Parse("http://127.0.0.1:7890")
+// HttpProxyClient local proxy: "http://127.0.0.1:7890"
+func HttpProxyClient(rawURL string) *http.Client {
+	proxyUrl, err := url.Parse(rawURL)
 	if err != nil {
 		panic(err)
 	}
@@ -54,7 +55,7 @@ func HttpProxyClient() *http.Client {
 	return &client
 }
 
-func GetResponseBodyFormUrl(method, reqUrl string, customHeader map[string]string, reqBody io.Reader, useProxy bool) ([]byte, error) {
+func GetResponseBodyFormUrl(method, reqUrl, proxyUrl string, customHeader map[string]string, reqBody io.Reader) ([]byte, error) {
 	request, _ := http.NewRequest(method,
 		reqUrl, reqBody)
 	request.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
@@ -62,8 +63,8 @@ func GetResponseBodyFormUrl(method, reqUrl string, customHeader map[string]strin
 		request.Header.Add(key, value)
 	}
 	httpClient := http.DefaultClient
-	if useProxy {
-		httpClient = HttpProxyClient()
+	if proxyUrl != "" {
+		httpClient = HttpProxyClient(proxyUrl)
 	}
 	response, err := httpClient.Do(request)
 	if err != nil {
