@@ -21,8 +21,8 @@ func JsonUnmarshalByJsonFile(jsonPath string, v any) error {
 }
 
 // JsonUnmarshalByURL 从URL请求中反序列化JSON数据
-func JsonUnmarshalByURL(method, reqUrl string, customHeader map[string]string, reqBody io.Reader, useProxy bool, v any) error {
-	resBody, err := httputils.GetResponseBodyFormUrl(method, reqUrl, customHeader, reqBody, useProxy)
+func JsonUnmarshalByURL(method, reqUrl, proxyUrl string, customHeader map[string]string, reqBody io.Reader, v any) error {
+	resBody, err := httputils.GetResponseBodyFormUrl(method, reqUrl, proxyUrl, customHeader, reqBody)
 	if err != nil {
 		return err
 	}
