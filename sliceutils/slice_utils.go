@@ -1,4 +1,4 @@
-package utils
+package sliceutils
 
 func UniqueSlice[T string | ~int](repeatedSlice []T) []T {
 	keys := make(map[T]bool)

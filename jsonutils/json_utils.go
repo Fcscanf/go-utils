@@ -1,7 +1,8 @@
-package utils
+package jsonutils
 
 import (
 	"encoding/json"
+	"github.com/Fcscanf/go-utils/httputils"
 	"io"
 	"os"
 )
@@ -21,7 +22,7 @@ func JsonUnmarshalByJsonFile(jsonPath string, v any) error {
 
 // JsonUnmarshalByURL 从URL请求中反序列化JSON数据
 func JsonUnmarshalByURL(method, reqUrl string, customHeader map[string]string, reqBody io.Reader, useProxy bool, v any) error {
-	resBody, err := GetResponseBodyFormUrl(method, reqUrl, customHeader, reqBody, useProxy)
+	resBody, err := httputils.GetResponseBodyFormUrl(method, reqUrl, customHeader, reqBody, useProxy)
 	if err != nil {
 		return err
 	}
