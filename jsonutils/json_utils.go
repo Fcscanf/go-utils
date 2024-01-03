@@ -10,11 +10,11 @@ import (
 
 // JsonUnmarshalByJsonFile 从JSON文件中反序列化JSON数据
 func JsonUnmarshalByJsonFile(jsonPath string, v any) error {
-	searchResultJson, err := os.ReadFile(jsonPath)
+	jsonFileBytes, err := os.ReadFile(jsonPath)
 	if err != nil {
 		return err
 	}
-	return json.Unmarshal(searchResultJson, &v)
+	return json.Unmarshal(jsonFileBytes, &v)
 }
 
 // JsonUnmarshalByURL 从URL请求中反序列化JSON数据
