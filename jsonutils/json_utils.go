@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/Fcscanf/go-utils/httputils"
 	"io"
+	"net/http"
 	"os"
 )
 
@@ -13,11 +14,7 @@ func JsonUnmarshalByJsonFile(jsonPath string, v any) error {
 	if err != nil {
 		return err
 	}
-	err = json.Unmarshal(searchResultJson, &v)
-	if err != nil {
-		return err
-	}
-	return err
+	return json.Unmarshal(searchResultJson, &v)
 }
 
 // JsonUnmarshalByURL 从URL请求中反序列化JSON数据
@@ -26,9 +23,14 @@ func JsonUnmarshalByURL(method, reqUrl, proxyUrl string, customHeader map[string
 	if err != nil {
 		return err
 	}
-	err = json.Unmarshal(resBody, &v)
+	return json.Unmarshal(resBody, &v)
+}
+
+// JsonUnmarshalByRequest 将Post请求的Body反序列化转为Struct
+func JsonUnmarshalByRequest(request *http.Request, v any) error {
+	body, err := io.ReadAll(request.Body)
 	if err != nil {
 		return err
 	}
-	return err
+	return json.Unmarshal(body, &v)
 }
