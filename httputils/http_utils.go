@@ -3,6 +3,7 @@ package httputils
 import (
 	"compress/gzip"
 	"crypto/tls"
+	"errors"
 	"io"
 	"net"
 	"net/http"
@@ -69,6 +70,9 @@ func GetResponseBodyFormUrl(method, reqUrl, proxyUrl string, customHeader map[st
 	response, err := httpClient.Do(request)
 	if err != nil {
 		return nil, err
+	}
+	if response.StatusCode != 200 {
+		return nil, errors.New(response.Status)
 	}
 	// 检查响应是否为 Gzip 压缩
 	if response.Header.Get("Content-Encoding") == "gzip" {
