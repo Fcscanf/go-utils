@@ -1,13 +1,16 @@
 package httputils
 
 import (
+	"bytes"
 	"compress/gzip"
 	"crypto/tls"
 	"fmt"
 	"io"
+	"mime/multipart"
 	"net"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 	"time"
 )
@@ -71,6 +74,10 @@ func GetResponseBodyFormUrl(method, reqUrl, proxyUrl string, customHeader map[st
 	if err != nil {
 		return nil, err
 	}
+	return after(*response)
+}
+
+func after(response http.Response) ([]byte, error) {
 	if response.StatusCode != 200 {
 		return nil, fmt.Errorf("response error : %s", response.Status)
 	}
@@ -89,4 +96,48 @@ func GetResponseBodyFormUrl(method, reqUrl, proxyUrl string, customHeader map[st
 		return io.ReadAll(response.Body)
 
 	}
+}
+
+// SubmitFormData 提交表单，上传文件
+func SubmitFormData(reqUrl, proxyUrl string, fileFields, formData map[string]string) ([]byte, error) {
+	uploadBody := &bytes.Buffer{}
+	writer := multipart.NewWriter(uploadBody)
+	for fileField, file := range fileFields {
+		f, err := os.Open(file)
+		if err != nil {
+			panic(err)
+		}
+
+		fWriter, err := writer.CreateFormFile(fileField, f.Name())
+		if err != nil {
+			return nil, err
+		}
+
+		_, err = io.Copy(fWriter, f)
+		if err != nil {
+			return nil, err
+		}
+		err = f.Close()
+		if err != nil {
+			return nil, err
+		}
+	}
+	for k, v := range formData {
+		_ = writer.WriteField(k, v)
+	}
+	err := writer.Close()
+	if err != nil {
+		return nil, err
+	}
+	request, _ := http.NewRequest(http.MethodPost, reqUrl, uploadBody)
+	request.Header.Add("Content-Type", writer.FormDataContentType())
+	httpClient := http.DefaultClient
+	if proxyUrl != "" {
+		httpClient = HttpProxyClient(proxyUrl)
+	}
+	response, err := httpClient.Do(request)
+	if err != nil {
+		return nil, err
+	}
+	return after(*response)
 }

@@ -26,6 +26,15 @@ func JsonUnmarshalByURL(method, reqUrl, proxyUrl string, customHeader map[string
 	return json.Unmarshal(resBody, &v)
 }
 
+// JsonUnmarshalBySubmitFormData 从提交FormData请求中反序列化JSON数据
+func JsonUnmarshalBySubmitFormData(method, reqUrl, proxyUrl string, fileFields, formData map[string]string, v any) error {
+	resBody, err := httputils.SubmitFormData(reqUrl, proxyUrl, fileFields, formData)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(resBody, &v)
+}
+
 // JsonUnmarshalByRequest 将Post请求的Body反序列化转为Struct
 func JsonUnmarshalByRequest(request *http.Request, v any) error {
 	body, err := io.ReadAll(request.Body)
