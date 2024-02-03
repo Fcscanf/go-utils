@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -105,10 +106,9 @@ func SubmitFormData(reqUrl, proxyUrl string, fileFields, formData map[string]str
 	for fileField, file := range fileFields {
 		f, err := os.Open(file)
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
-
-		fWriter, err := writer.CreateFormFile(fileField, f.Name())
+		fWriter, err := writer.CreateFormFile(fileField, filepath.Base(file))
 		if err != nil {
 			return nil, err
 		}
