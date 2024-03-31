@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"reflect"
+	"strings"
 )
 
 func QueryStringDecoder4Request(r *http.Request, val any) error {
@@ -19,4 +20,20 @@ func QueryStringDecoder4Request(r *http.Request, val any) error {
 		}
 	}
 	return nil
+}
+
+func QueryStringEncoder(val any) (string, error) {
+	t := reflect.TypeOf(val)
+	v := reflect.ValueOf(val)
+	if t.Kind() != reflect.Struct || v.IsNil() {
+		return "", fmt.Errorf("val must be a pointer type and cannot be nil")
+	}
+	result := "?"
+	for i := 0; i < v.NumField(); i++ {
+		tag := v.Type().Field(i).Tag.Get("url")
+		if tag != "" && v.Field(i).Kind() == reflect.String {
+			result += tag + "=" + v.Field(i).String() + "&"
+		}
+	}
+	return strings.TrimSuffix(result, "&"), nil
 }
