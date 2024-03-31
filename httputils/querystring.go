@@ -8,10 +8,10 @@ import (
 
 func QueryStringDecoder4Request(r *http.Request, val any) error {
 	t := reflect.TypeOf(val)
-	v := reflect.ValueOf(val).Elem()
 	if t.Kind() != reflect.Pointer {
-		return fmt.Errorf("unsupported argument type")
+		return fmt.Errorf("val must be of pointer type")
 	}
+	v := reflect.ValueOf(val).Elem()
 	for i := 0; i < v.NumField(); i++ {
 		tag := v.Type().Field(i).Tag.Get("url")
 		if tag != "" && v.Field(i).Kind() == reflect.String {
