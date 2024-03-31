@@ -6,7 +6,7 @@ import (
 	"reflect"
 )
 
-func QueryStringDecoder4Request(r *http.Request, val any) error {
+func QueryStringDecoder4Request(r *http.Request, val *any) error {
 	t := reflect.TypeOf(val)
 	if t.Kind() != reflect.Struct {
 		return fmt.Errorf("unsupported argument type")
