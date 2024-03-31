@@ -23,10 +23,18 @@ func QueryStringDecoder4Request(r *http.Request, val any) error {
 }
 
 func QueryStringEncoder(val any) (string, error) {
+	if val == nil {
+		return "", fmt.Errorf("val cannot be nil")
+	}
 	t := reflect.TypeOf(val)
-	v := reflect.ValueOf(val)
-	if t.Kind() != reflect.Struct {
-		return "", fmt.Errorf("val must be a pointer type and cannot be nil")
+	v := reflect.Value{}
+	switch t.Kind() {
+	case reflect.Struct:
+		v = reflect.ValueOf(val)
+	case reflect.Pointer:
+		v = reflect.ValueOf(val).Elem()
+	default:
+		return "", fmt.Errorf("val must be of struct or pointer type")
 	}
 	result := "?"
 	for i := 0; i < v.NumField(); i++ {
