@@ -25,7 +25,7 @@ func QueryStringDecoder4Request(r *http.Request, val any) error {
 func QueryStringEncoder(val any) (string, error) {
 	t := reflect.TypeOf(val)
 	v := reflect.ValueOf(val)
-	if t.Kind() != reflect.Struct || v.IsNil() {
+	if t.Kind() != reflect.Struct {
 		return "", fmt.Errorf("val must be a pointer type and cannot be nil")
 	}
 	result := "?"
