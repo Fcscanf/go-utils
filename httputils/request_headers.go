@@ -1,38 +1,28 @@
 package httputils
 
-type requestHeaders struct {
-	Header map[string]string
-}
+type RequestHeader map[string]string
 
-func NewRequestHeaders() requestHeaders {
-	return requestHeaders{Header: make(map[string]string)}
-}
-
-func (header requestHeaders) Get() map[string]string {
-	return header.Header
-}
-
-func (header requestHeaders) Add(k, v string) requestHeaders {
-	header.Header[k] = v
+func (header RequestHeader) Add(k, v string) RequestHeader {
+	header[k] = v
 	return header
 }
 
-func (header requestHeaders) Cookie(cookie string) requestHeaders {
-	header.Header["Cookie"] = cookie
+func (header RequestHeader) Cookie(cookie string) RequestHeader {
+	header["Cookie"] = cookie
 	return header
 }
 
-func (header requestHeaders) Referer(referer string) requestHeaders {
-	header.Header["Referer"] = referer
+func (header RequestHeader) Referer(referer string) RequestHeader {
+	header["Referer"] = referer
 	return header
 }
 
-func (header requestHeaders) UserAgent(userAgent string) requestHeaders {
-	header.Header["User-Agent"] = userAgent
+func (header RequestHeader) UserAgent(userAgent string) RequestHeader {
+	header["User-Agent"] = userAgent
 	return header
 }
 
-func (header requestHeaders) ContentType(contentType string) requestHeaders {
-	header.Header["Content-Type"] = contentType
+func (header RequestHeader) ContentType(contentType string) RequestHeader {
+	header["Content-Type"] = contentType
 	return header
 }
