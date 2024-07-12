@@ -20,6 +20,9 @@ type HttpClient struct {
 }
 
 func (client HttpClient) SetProxyUrl(rawURL string) HttpClient {
+	if rawURL == "" {
+		return client
+	}
 	proxyUrl, err := url.Parse(rawURL)
 	if err != nil {
 		panic(err)

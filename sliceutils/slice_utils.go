@@ -1,6 +1,6 @@
 package sliceutils
 
-func UniqueSlice[T string | ~int](repeatedSlice []T) []T {
+func Unique[T string | ~int](repeatedSlice []T) []T {
 	keys := make(map[T]bool)
 	var list []T
 	for _, entry := range repeatedSlice {
