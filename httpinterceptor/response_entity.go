@@ -17,34 +17,34 @@ type ResponseEntity struct {
 	Data    any    `json:"data"`
 }
 
-func (r *ResponseEntity) Ok(data any) ResponseEntity {
+func (r ResponseEntity) Ok(data any) ResponseEntity {
 	r.Code = 200
 	r.Message = BusinessSuccess
 	r.Data = data
-	return *r
+	return r
 }
 
-func (r *ResponseEntity) Fail(data any) ResponseEntity {
+func (r ResponseEntity) Fail(data any) ResponseEntity {
 	r.Code = 500
 	r.Message = BusinessError
 	r.Data = data
-	return *r
+	return r
 }
 
-func (r *ResponseEntity) FailMessage(msg string) ResponseEntity {
+func (r ResponseEntity) FailMessage(msg string) ResponseEntity {
 	r.Code = 500
 	r.Message = msg
-	return *r
+	return r
 }
 
-func (r *ResponseEntity) Msg(code int, msg string, data any) ResponseEntity {
+func (r ResponseEntity) Msg(code int, msg string, data any) ResponseEntity {
 	r.Code = code
 	r.Message = msg
 	r.Data = data
-	return *r
+	return r
 }
 
-func (r *ResponseEntity) ResponseJson(writer http.ResponseWriter, result any, err error) {
+func (r ResponseEntity) ResponseJson(writer http.ResponseWriter, result any, err error) {
 	writer.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	if err != nil {
 		log.Printf("servive error of %s", err)

@@ -10,7 +10,13 @@ type HttpResponse interface {
 	ResponseJson(writer http.ResponseWriter, result any, err error)
 }
 
-var DefaultHttpResponse ResponseEntity
+var DefaultHttpResponse HttpResponse
+
+func init() {
+	if DefaultHttpResponse == nil {
+		DefaultHttpResponse = ResponseEntity{}
+	}
+}
 
 type serviceFunc[T, R any] func(T) (R, error)
 
