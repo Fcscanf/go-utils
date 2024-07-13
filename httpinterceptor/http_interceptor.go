@@ -43,8 +43,7 @@ func GetService[T, R any](writer http.ResponseWriter, request *http.Request, v T
 type voidServiceFunc[T any] func(T) error
 
 func PostJsonVoidService[T any](writer http.ResponseWriter, request *http.Request, v T, service voidServiceFunc[T]) {
-	err := jsonutils.JsonUnmarshalByRequest(request, &v)
-	if err != nil {
+	if err := jsonutils.JsonUnmarshalByRequest(request, &v); err != nil {
 		DefaultHttpResponse.ResponseJson(writer, nil, err)
 		return
 	}
@@ -52,8 +51,7 @@ func PostJsonVoidService[T any](writer http.ResponseWriter, request *http.Reques
 }
 
 func GetVoidService[T any](writer http.ResponseWriter, request *http.Request, v T, service voidServiceFunc[T]) {
-	err := httputils.QueryStringDecoder4Request(request, &v)
-	if err != nil {
+	if err := httputils.QueryStringDecoder4Request(request, &v); err != nil {
 		DefaultHttpResponse.ResponseJson(writer, nil, err)
 		return
 	}
