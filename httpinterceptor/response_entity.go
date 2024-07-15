@@ -1,11 +1,5 @@
 package httpinterceptor
 
-import (
-	"encoding/json"
-	"log"
-	"net/http"
-)
-
 const (
 	BusinessError   = "System Error"
 	BusinessSuccess = "Success"
@@ -17,41 +11,25 @@ type ResponseEntity struct {
 	Data    any    `json:"data"`
 }
 
-func (r ResponseEntity) Ok(data any) ResponseEntity {
+func (r *ResponseEntity) Ok(data any) {
 	r.Code = 200
 	r.Message = BusinessSuccess
 	r.Data = data
-	return r
 }
 
-func (r ResponseEntity) Fail(data any) ResponseEntity {
+func (r *ResponseEntity) Fail(data any) {
 	r.Code = 500
 	r.Message = BusinessError
 	r.Data = data
-	return r
 }
 
-func (r ResponseEntity) FailMessage(msg string) ResponseEntity {
+func (r *ResponseEntity) FailMessage(msg string) {
 	r.Code = 500
 	r.Message = msg
-	return r
 }
 
-func (r ResponseEntity) Msg(code int, msg string, data any) ResponseEntity {
+func (r *ResponseEntity) Msg(code int, msg string, data any) {
 	r.Code = code
 	r.Message = msg
 	r.Data = data
-	return r
-}
-
-func (r ResponseEntity) ResponseJson(writer http.ResponseWriter, result any, err error) {
-	writer.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	if err != nil {
-		log.Printf("servive error of %s", err)
-		r.FailMessage(BusinessError)
-	} else {
-		r.Ok(result)
-	}
-	response, _ := json.Marshal(r)
-	_, _ = writer.Write(response)
 }
