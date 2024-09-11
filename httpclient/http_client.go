@@ -19,6 +19,9 @@ type HttpClient struct {
 	http.Client
 }
 
+// SetProxyUrl
+//
+//	Set the URL of the HTTP request proxy
 func (client HttpClient) SetProxyUrl(rawURL string) HttpClient {
 	if rawURL == "" {
 		return client
@@ -35,7 +38,9 @@ func (client HttpClient) SetProxyUrl(rawURL string) HttpClient {
 	return client
 }
 
-// EnableCookieJar 开启HttpClient Cookie管理
+// EnableCookieJar
+//
+//	Enable HttpClient Cookie management
 func (client HttpClient) EnableCookieJar() HttpClient {
 	// 创建一个新的cookie jar
 	jar, err := cookiejar.New(nil)
@@ -46,6 +51,9 @@ func (client HttpClient) EnableCookieJar() HttpClient {
 	return client
 }
 
+// Get
+//
+//	GET request
 func (client HttpClient) Get(url string, requestHeader map[string]string) (*http.Response, []byte, error) {
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
@@ -57,6 +65,9 @@ func (client HttpClient) Get(url string, requestHeader map[string]string) (*http
 	return client.Execute(req)
 }
 
+// GetJson
+//
+//	GET request and serialize the response JSON data to an object
 func (client HttpClient) GetJson(url string, requestHeader map[string]string, v any) error {
 	_, resBytes, err := client.Get(url, requestHeader)
 	if err != nil {
@@ -65,6 +76,9 @@ func (client HttpClient) GetJson(url string, requestHeader map[string]string, v 
 	return json.Unmarshal(resBytes, &v)
 }
 
+// Post
+//
+//	POST request
 func (client HttpClient) Post(url string, reqBody io.Reader, requestHeader map[string]string) (*http.Response, []byte, error) {
 	req, err := http.NewRequest(http.MethodPost, url, reqBody)
 	if err != nil {
@@ -76,6 +90,9 @@ func (client HttpClient) Post(url string, reqBody io.Reader, requestHeader map[s
 	return client.Execute(req)
 }
 
+// PostJson
+//
+//	POST request and serialize the response JSON data to an object
 func (client HttpClient) PostJson(url string, reqBody io.Reader, requestHeader map[string]string, v any) error {
 	_, resBytes, err := client.Post(url, reqBody, requestHeader)
 	if err != nil {
@@ -84,6 +101,9 @@ func (client HttpClient) PostJson(url string, reqBody io.Reader, requestHeader m
 	return json.Unmarshal(resBytes, &v)
 }
 
+// PostForm
+//
+//	POST request to send FormData data
 func (client HttpClient) PostForm(url string, formData, fileData, requestHeader map[string]string) (*http.Response, []byte, error) {
 	uploadBody := &bytes.Buffer{}
 	writer := multipart.NewWriter(uploadBody)
@@ -124,6 +144,9 @@ func (client HttpClient) PostForm(url string, formData, fileData, requestHeader 
 	return client.Execute(request)
 }
 
+// PostFormJson
+//
+//	POST requests to send FormData data and serialize the response JSON data to an object
 func (client HttpClient) PostFormJson(url string, formData, fileData, requestHeader map[string]string, v any) error {
 	_, resBytes, err := client.PostForm(url, fileData, fileData, requestHeader)
 	if err != nil {
