@@ -18,14 +18,12 @@ func Run(name string, args ...string) (string, error) {
 //
 //	Run the script using the sh command interpreter
 func RunSh(args ...string) (string, error) {
-	out, err := exec.Command("/bin/sh", args...).CombinedOutput()
-	return string(out), err
+	return Run("/bin/sh", args...)
 }
 
 // RunCommand
 //
 //	Use the sh command interpreter to execute commands
 func RunCommand(args string) (string, error) {
-	out, err := exec.Command("/bin/sh", "-c", args).CombinedOutput()
-	return string(out), err
+	return Run("/bin/sh", "-c", args)
 }
