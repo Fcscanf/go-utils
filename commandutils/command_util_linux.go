@@ -16,14 +16,14 @@ func Run(name string, args ...string) (string, error) {
 
 // RunSh
 //
-//	Run the script using the sh command interpreter
+//	Execute a Shell script file, such as test.sh
 func RunSh(args ...string) (string, error) {
 	return Run("/bin/sh", args...)
 }
 
 // RunCommand
 //
-//	Use the sh command interpreter to execute commands
+//	Use the sh command interpreter to execute a single-line command, such as ls
 func RunCommand(args string) (string, error) {
 	return Run("/bin/sh", "-c", args)
 }

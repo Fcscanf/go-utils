@@ -18,3 +18,17 @@ func Run(name string, args ...string) (string, error) {
 	output, _ := charsetutils.GbkToUtf8(out)
 	return string(output), nil
 }
+
+// RunSh
+//
+//	Execute script files, such as test.bat,test.cmd
+func RunSh(args ...string) (string, error) {
+	return Run(args[0], args[1:]...)
+}
+
+// RunCommand
+//
+//	Use the cmd command interpreter to execute single-line commands, such as dir
+func RunCommand(args string) (string, error) {
+	return Run("cmd", "/c", args)
+}
