@@ -24,6 +24,6 @@ func RunSh(args ...string) (string, error) {
 // RunCommand
 //
 //	Use the sh command interpreter to execute a single-line command, such as ls
-func RunCommand(args string) (string, error) {
-	return Run("/bin/sh", "-c", args)
+func RunCommand(args ...string) (string, error) {
+	return Run("/bin/sh", append([]string{"/c"}, args...)...)
 }

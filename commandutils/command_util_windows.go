@@ -29,6 +29,6 @@ func RunSh(args ...string) (string, error) {
 // RunCommand
 //
 //	Use the cmd command interpreter to execute single-line commands, such as dir
-func RunCommand(args string) (string, error) {
-	return Run("cmd", "/c", args)
+func RunCommand(args ...string) (string, error) {
+	return Run("cmd", append([]string{"/c"}, args...)...)
 }

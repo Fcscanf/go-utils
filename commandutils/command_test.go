@@ -6,10 +6,10 @@ import (
 )
 
 func TestRunCommand(t *testing.T) {
-	ipConfigO, err := Run("ipconfig")
+	outP, err := Run("ipconfig")
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	fmt.Println(ipConfigO)
+	fmt.Println(outP)
 }
