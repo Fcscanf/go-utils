@@ -51,9 +51,7 @@ func (client HttpClient) EnableCookieJar() HttpClient {
 	return client
 }
 
-// Get
-//
-//	GET request
+// Get request
 func (client HttpClient) Get(url string, requestHeader map[string]string) (*http.Response, []byte, error) {
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
@@ -63,6 +61,20 @@ func (client HttpClient) Get(url string, requestHeader map[string]string) (*http
 		req.Header.Add(key, value)
 	}
 	return client.Execute(req)
+}
+
+// GetFile Get file via Get request
+func (client HttpClient) GetFile(url, saveFile string, requestHeader map[string]string) error {
+	_, resBytes, err := client.Get(url, requestHeader)
+	if err != nil {
+		return err
+	}
+	f, err := os.Create(saveFile)
+	if err != nil {
+		return err
+	}
+	_, err = f.Write(resBytes)
+	return err
 }
 
 // GetJson
@@ -76,9 +88,7 @@ func (client HttpClient) GetJson(url string, requestHeader map[string]string, v 
 	return json.Unmarshal(resBytes, &v)
 }
 
-// Post
-//
-//	POST request
+// Post request
 func (client HttpClient) Post(url string, reqBody io.Reader, requestHeader map[string]string) (*http.Response, []byte, error) {
 	req, err := http.NewRequest(http.MethodPost, url, reqBody)
 	if err != nil {
