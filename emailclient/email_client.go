@@ -15,7 +15,7 @@ import (
 	"strings"
 )
 
-type emailClient struct {
+type EmailClient struct {
 	// SMTP协议的服务器地址
 	serverAddr string
 	serverHost string
@@ -46,11 +46,11 @@ const (
 	MailHtml MailType = "html"
 )
 
-func New(serverAddr, authPassWord string, senderAddr mail.Address) (*emailClient, error) {
+func New(serverAddr, authPassWord string, senderAddr mail.Address) (*EmailClient, error) {
 	if serverAddr == "" || authPassWord == "" || senderAddr.Address == "" {
 		return nil, errors.New("serverHost, serverSSLHost, authPassWord and senderAddr are required")
 	}
-	emailClient := &emailClient{}
+	emailClient := &EmailClient{}
 	if host, _, err := net.SplitHostPort(serverAddr); err == nil {
 		emailClient.serverHost = host
 	} else {
@@ -62,12 +62,12 @@ func New(serverAddr, authPassWord string, senderAddr mail.Address) (*emailClient
 	return emailClient, nil
 }
 
-func (emailC *emailClient) auth() smtp.Auth {
+func (emailC *EmailClient) auth() smtp.Auth {
 	return smtp.PlainAuth("", emailC.senderAddr.Address, emailC.authPassWord, emailC.serverHost)
 }
 
 // Send 使用非加密方式发送
-func (emailC *emailClient) Send(email Email) error {
+func (emailC *EmailClient) Send(email Email) error {
 	msg, err := emailC.buildMsg(email)
 	if err != nil {
 		return err
@@ -77,7 +77,7 @@ func (emailC *emailClient) Send(email Email) error {
 }
 
 // SSend 使用SSL协议安全的发送，部分服务器会有此限制，普通发送不成功
-func (emailC *emailClient) SSend(email Email) error {
+func (emailC *EmailClient) SSend(email Email) error {
 	msg, err := emailC.buildMsg(email)
 	if err != nil {
 		return err
@@ -86,7 +86,7 @@ func (emailC *emailClient) SSend(email Email) error {
 	return emailC.sendMailUsingTLS(email.To, msg)
 }
 
-func (emailC *emailClient) buildMsg(email Email) ([]byte, error) {
+func (emailC *EmailClient) buildMsg(email Email) ([]byte, error) {
 	if len(email.To) == 0 || email.MailType == "" {
 		return nil, errors.New("email to and mail type are required")
 	}
@@ -149,7 +149,7 @@ func dial(addr string) (*smtp.Client, error) {
 // SendMailUsingTLS 参考net/smtp的func SendMail()
 // 使用net.Dial连接tls(ssl)端口时,smtp.NewClient()会卡住且不提示err
 // len(to)>1时,to[1]开始提示是密送
-func (emailC *emailClient) sendMailUsingTLS(to []string, msg []byte) (err error) {
+func (emailC *EmailClient) sendMailUsingTLS(to []string, msg []byte) (err error) {
 
 	//create smtp client
 	c, err := dial(emailC.serverAddr)
