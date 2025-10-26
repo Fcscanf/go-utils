@@ -46,20 +46,19 @@ const (
 	MailHtml MailType = "html"
 )
 
-func New(serverAddr, authPassWord string, senderAddr mail.Address) (*EmailClient, error) {
+func (emailC *EmailClient) Init(serverAddr, authPassWord string, senderAddr mail.Address) error {
 	if serverAddr == "" || authPassWord == "" || senderAddr.Address == "" {
-		return nil, errors.New("serverHost, serverSSLHost, authPassWord and senderAddr are required")
+		return errors.New("serverHost, serverSSLHost, authPassWord and senderAddr are required")
 	}
-	emailClient := &EmailClient{}
 	if host, _, err := net.SplitHostPort(serverAddr); err == nil {
-		emailClient.serverHost = host
+		emailC.serverHost = host
 	} else {
-		return nil, err
+		return err
 	}
-	emailClient.senderAddr = senderAddr
-	emailClient.serverAddr = serverAddr
-	emailClient.authPassWord = authPassWord
-	return emailClient, nil
+	emailC.senderAddr = senderAddr
+	emailC.serverAddr = serverAddr
+	emailC.authPassWord = authPassWord
+	return nil
 }
 
 func (emailC *EmailClient) auth() smtp.Auth {
